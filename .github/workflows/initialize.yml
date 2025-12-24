@@ -1,0 +1,62 @@
+name: Update README and index from Issue
+
+on:
+  #Triggers when the repository is created
+  create:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  init-files:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    permissions:
+       contents: write      
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract data from repository description
+        run: |
+          TITLE="${{ github.event.repository.name }}"
+          DESCRIPTION="${{ github.event.repository.description }}"
+
+          # Split description at first semicolon
+          THEMENNAME=$(echo "$DESCRIPTION" | cut -d';' -f1 | xargs)
+          NEW_DESCRIPTION=$(echo "$DESCRIPTION" | cut -s -d';' -f2- | xargs)
+
+          echo "TITLE=$TITLE" >> $GITHUB_ENV
+          echo "THEMENNAME=$THEMENNAME" >> $GITHUB_ENV
+          echo "NEW_DESCRIPTION=$NEW_DESCRIPTION" >> $GITHUB_ENV
+
+      - name: Update README.adoc
+        run: |
+          sed -i "s/Themennummer/${TITLE}/g" README.adoc
+          sed -i "s/Themenname/${THEMENNAME}/g" README.adoc
+
+      - name: Update index.html
+        run: |
+          sed -i "s/Themennummer/${TITLE}/g" index.html
+          sed -i "s/Themenname/${THEMENNAME}/g" index.html
+
+      - name: Update repository description
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.repos.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              description: process.env.NEW_DESCRIPTION || ""
+            })
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+            git add README.adoc index.html
+            git commit -m "Initialize Themennumm
