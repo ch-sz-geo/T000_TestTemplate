@@ -51,7 +51,7 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}  # scopes token to whole org
-          repositories: "models"
+          repositories: "Test_models"
           
       - name: Debug token scope
         env:
@@ -127,12 +127,12 @@ jobs:
             --arg ren  "${{ steps.changes.outputs.rename }}" \
             '{event_type: "update", client_payload: {repo: $repo, sha: $sha, ref: $ref, add: $add, modify: $mod, delete: $del, rename: $ren}}')
 
-          # sends out a dispatch call to the models Repository
+          # sends out a dispatch call to the Test_models Repository
           response=$(curl -s -w "\n%{http_code}" \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GH_TOKEN" \
-            https://api.github.com/repos/ch-sz-geo/models/dispatches \
+            https://api.github.com/repos/ch-sz-geo/Test_models/dispatches \
             -d "$payload")
             
           #This section is to fail the task when the dispach to the target repo didn't work
