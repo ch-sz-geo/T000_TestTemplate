@@ -17,7 +17,7 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-  # Triggers when an A000_defaultDesign design_update is run
+  # Triggers when an Test_DefaultDesign design_update is run
   repository_dispatch:
     types: [update-design]
 
@@ -48,18 +48,18 @@ jobs:
         run: asciidoctor --version
       - name: create file
         run: |
-          asciidoctor -a stylesdir=https://ch-sz-geo.github.io/A000_defaultDesign/themes/ -a stylesheet=stylesheet.css -a linkcss -o ./docs/modelldokumentation.html ./docs/modelldokumentation/modelldokumentation.adoc
-          asciidoctor -a stylesdir=https://ch-sz-geo.github.io/A000_defaultDesign/themes/ -a stylesheet=style_entry.css -a linkcss -o ./docs/erfassungsrichtlinien.html ./docs/erfassungsrichtlinien/erfassungsrichtlinien.adoc
+          asciidoctor -a stylesdir=https://ch-sz-geo.github.io/Test_DefaultDesign/themes/ -a stylesheet=stylesheet.css -a linkcss -o ./docs/modelldokumentation.html ./docs/modelldokumentation/modelldokumentation.adoc
+          asciidoctor -a stylesdir=https://ch-sz-geo.github.io/Test_DefaultDesign/themes/ -a stylesheet=style_entry.css -a linkcss -o ./docs/erfassungsrichtlinien.html ./docs/erfassungsrichtlinien/erfassungsrichtlinien.adoc
       - name: install Asciidoc Pdf
         run: gem install asciidoctor-pdf
       - name: create pdfs
         run: |
-          curl -fsSL https://ch-sz-geo.github.io/A000_defaultDesign/themes/pdfTheme.yml -o /tmp/pdfTheme.yml
-          curl -fsSL https://github.com/ch-sz-geo/A000_defaultDesign/raw/refs/heads/main/fonts/tradegothic-Italic.ttf -o /tmp/tradegothic-Italic.ttf
-          curl -fsSL https://github.com/ch-sz-geo/A000_defaultDesign/raw/refs/heads/main/fonts/tradegothic-bold.ttf -o /tmp/tradegothic-bold.ttf
-          curl -fsSL https://github.com/ch-sz-geo/A000_defaultDesign/raw/refs/heads/main/fonts/tradegothic-bold_italic.ttf -o /tmp/tradegothic-bold_italic.ttf
-          curl -fsSL https://github.com/ch-sz-geo/A000_defaultDesign/raw/refs/heads/main/fonts/tradegothic-light.ttf -o /tmp/tradegothic-light.ttf
-          curl -fsSL https://github.com/ch-sz-geo/A000_defaultDesign/raw/refs/heads/main/fonts/tradegothic-normal.ttf -o /tmp/tradegothic-normal.ttf
+          curl -fsSL https://ch-sz-geo.github.io/Test_DefaultDesign/themes/pdfTheme.yml -o /tmp/pdfTheme.yml
+          curl -fsSL https://github.com/ch-sz-geo/Test_DefaultDesign/raw/refs/heads/main/fonts/tradegothic-Italic.ttf -o /tmp/tradegothic-Italic.ttf
+          curl -fsSL https://github.com/ch-sz-geo/Test_DefaultDesign/raw/refs/heads/main/fonts/tradegothic-bold.ttf -o /tmp/tradegothic-bold.ttf
+          curl -fsSL https://github.com/ch-sz-geo/Test_DefaultDesign/raw/refs/heads/main/fonts/tradegothic-bold_italic.ttf -o /tmp/tradegothic-bold_italic.ttf
+          curl -fsSL https://github.com/ch-sz-geo/Test_DefaultDesign/raw/refs/heads/main/fonts/tradegothic-light.ttf -o /tmp/tradegothic-light.ttf
+          curl -fsSL https://github.com/ch-sz-geo/Test_DefaultDesign/raw/refs/heads/main/fonts/tradegothic-normal.ttf -o /tmp/tradegothic-normal.ttf
           asciidoctor-pdf -a allow-uri-read -a imagesdir= -a pdf-fontsdir=/tmp --theme /tmp/pdfTheme.yml -o ./docs/modelldokumentation.pdf ./docs/modelldokumentation/modelldokumentation.adoc
           asciidoctor-pdf -a allow-uri-read -a imagesdir= -a pdf-fontsdir=/tmp --theme /tmp/pdfTheme.yml -o ./docs/erfassungsrichtlinien.pdf ./docs/erfassungsrichtlinien/erfassungsrichtlinien.adoc
       - name: Commit HTML
