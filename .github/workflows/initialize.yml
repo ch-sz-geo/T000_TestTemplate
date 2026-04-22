@@ -11,7 +11,7 @@ on:
 
 concurrency:
   group: my-shared-group
-  cancel-in-progress: false
+  cancel-in-progress: true
   
 jobs:
   first-Initialisation:
