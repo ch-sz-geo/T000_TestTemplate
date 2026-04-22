@@ -41,7 +41,6 @@ jobs:
             -H "Authorization: Bearer $GH_TOKEN" \
             https://api.github.com/repos/ch-sz-geo/Test_DefaultDesign/dispatches \
             -d '{"event_type":"add-dispatch-step","client_payload":{"ref":"main", "repo_name": "${{ github.event.repository.name }}" }}')
-
           #This section is to fail the task when the dispach to the target repo didn't work
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | head -n -1)
@@ -63,10 +62,8 @@ jobs:
           touch temp.yml
           sed -n '1,16p' initialize.yml > temp.yml
           sed -n '83,84p' initialize.yml >> temp.yml
-          sed -n '87,145p' initialize.yml >> temp.yml
-
+          sed -n '87,157p' initialize.yml >> temp.yml
           mv temp.yml initialize.yml
-
           cd ../..
           
           git pull
@@ -88,7 +85,7 @@ jobs:
     runs-on: ubuntu-latest
     
     permissions:
-      contents: write      
+      contents: write  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -106,7 +103,6 @@ jobs:
             
             # Trim whitespace from the value
             value=$(echo "$value" | xargs)
-
             # Replace each key in README.adoc and index.html
             for key in "${key_array[@]}"; do
               key=$(echo "$key"| xargs)
@@ -132,7 +128,6 @@ jobs:
               fi
             done
           done < init
-
       - name: Commit and push changes
         run: |
           git pull
