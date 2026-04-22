@@ -54,6 +54,7 @@ jobs:
         run: asciidoctor --version
       - name: create file
         run: |
+          git pull
           asciidoctor -a stylesdir=https://ch-sz-geo.github.io/Test_DefaultDesign/themes/ -a stylesheet=stylesheet.css -a linkcss -o ./docs/modelldokumentation.html ./docs/modelldokumentation/modelldokumentation.adoc
           asciidoctor -a stylesdir=https://ch-sz-geo.github.io/Test_DefaultDesign/themes/ -a stylesheet=style_entry.css -a linkcss -o ./docs/erfassungsrichtlinien.html ./docs/erfassungsrichtlinien/erfassungsrichtlinien.adoc
       - name: install Asciidoc Pdf
@@ -70,7 +71,6 @@ jobs:
           asciidoctor-pdf -a allow-uri-read -a imagesdir= -a pdf-fontsdir=/tmp --theme /tmp/pdfTheme.yml -o ./docs/erfassungsrichtlinien.pdf ./docs/erfassungsrichtlinien/erfassungsrichtlinien.adoc
       - name: Commit HTML
         run: |
-          git pull
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Action"
           git add .
