@@ -61,14 +61,15 @@ jobs:
           ls
           cd .github/workflows
           touch temp.yml
-          sed -n '1,13p' initialize.yml > temp.yml
+          sed -n '1,16p' initialize.yml > temp.yml
           sed -n '83,84p' initialize.yml >> temp.yml
-          sed -n '87,145p' initialize.yml >> temp.yml
+          sed -n '88,145p' initialize.yml >> temp.yml
 
           mv temp.yml initialize.yml
 
           cd ../..
-
+          
+          git pull
           git status
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
