@@ -62,8 +62,8 @@ jobs:
           cd .github/workflows
           touch temp.yml
           sed -n '1,13p' initialize.yml > temp.yml
-          sed -n '80,81p' initialize.yml >> temp.yml
-          sed -n '84,140p' initialize.yml >> temp.yml
+          sed -n '83,84p' initialize.yml >> temp.yml
+          sed -n '87,145p' initialize.yml >> temp.yml
 
           mv temp.yml initialize.yml
 
