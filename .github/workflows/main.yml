@@ -24,7 +24,7 @@ on:
 # This is so the initialize and the main workflow can't run simultaiously
 concurrency:
   group: my-shared-group
-  cancel-in-progress: true
+  cancel-in-progress: false
 
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
