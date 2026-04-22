@@ -12,15 +12,21 @@ on:
       - 'docs/modelldokumentation/*'
       - 'docs/erfassungsrichtlinien/*'
       - 'docs/img/*'
-      - 'index.html'
+      - 'index.html' 
   
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
+  
   # Triggers when an Test_DefaultDesign design_update is run
   repository_dispatch:
     types: [update-design]
 
+# This is so the initialize and the main workflow can't run simultaiously
+concurrency:
+  group: my-shared-group
+  cancel-in-progress: false
+
+  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
