@@ -41,6 +41,7 @@ jobs:
             -H "Authorization: Bearer $GH_TOKEN" \
             https://api.github.com/repos/ch-sz-geo/Test_DefaultDesign/dispatches \
             -d '{"event_type":"add-dispatch-step","client_payload":{"ref":"main", "repo_name": "${{ github.event.repository.name }}" }}')
+
           #This section is to fail the task when the dispach to the target repo didn't work
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | head -n -1)
@@ -62,8 +63,10 @@ jobs:
           touch temp.yml
           sed -n '1,16p' initialize.yml > temp.yml
           sed -n '83,84p' initialize.yml >> temp.yml
-          sed -n '87,157p' initialize.yml >> temp.yml
+          sed -n '87,158p' initialize.yml >> temp.yml
+
           mv temp.yml initialize.yml
+
           cd ../..
           
           git pull
@@ -86,8 +89,22 @@ jobs:
     
     permissions:
       contents: write  
+      actions: write
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      # cancle any runs of the main.yml
+      - name: Cancel running Pages Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUN_IDS=$(gh api /repos/${{ github.repository }}/actions/workflows/main.yml/runs \
+            --jq '[.workflow_runs[] | select(.status == "in_progress" or .status == "queued")] | .[].id')
+          
+          for RUN_ID in $RUN_IDS; do
+            echo "Cancelling Pages Publish run $RUN_ID"
+            gh api --method POST /repos/${{ github.repository }}/actions/runs/$RUN_ID/cancel
+          done
+    
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -103,6 +120,7 @@ jobs:
             
             # Trim whitespace from the value
             value=$(echo "$value" | xargs)
+
             # Replace each key in README.adoc and index.html
             for key in "${key_array[@]}"; do
               key=$(echo "$key"| xargs)
@@ -128,6 +146,7 @@ jobs:
               fi
             done
           done < init
+
       - name: Commit and push changes
         run: |
           git pull
