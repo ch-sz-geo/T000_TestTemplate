@@ -63,7 +63,7 @@ jobs:
           touch temp.yml
           sed -n '1,16p' initialize.yml > temp.yml
           sed -n '83,84p' initialize.yml >> temp.yml
-          sed -n '88,145p' initialize.yml >> temp.yml
+          sed -n '87,145p' initialize.yml >> temp.yml
 
           mv temp.yml initialize.yml
 
@@ -81,7 +81,6 @@ jobs:
           git push
           
           
-
   init-files:
   
     needs: first-Initialisation
