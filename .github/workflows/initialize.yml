@@ -9,6 +9,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+concurrency:
+  group: my-shared-group
+  cancel-in-progress: false
   
 jobs:
   first-Initialisation:
