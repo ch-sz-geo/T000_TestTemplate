@@ -39,7 +39,7 @@ jobs:
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GH_TOKEN" \
-            https://api.github.com/repos/ch-sz-geo/Test_DefaultDesign/dispatches \
+            https://api.github.com/repos/ch-sz-geo/A000_defaultDesign/dispatches \
             -d '{"event_type":"add-dispatch-step","client_payload":{"ref":"main", "repo_name": "${{ github.event.repository.name }}" }}')
 
           #This section is to fail the task when the dispach to the target repo didn't work
@@ -63,7 +63,7 @@ jobs:
           touch temp.yml
           sed -n '1,16p' initialize.yml > temp.yml
           sed -n '83,84p' initialize.yml >> temp.yml
-          sed -n '87,158p' initialize.yml >> temp.yml
+          sed -n '87,156p' initialize.yml >> temp.yml
 
           mv temp.yml initialize.yml
 
@@ -111,6 +111,7 @@ jobs:
 
       - name: Apply initialization from init.txt
         run: |
+          fileList=("README.adoc" "index.html" "docs/modelldokumentation/modelldokumentation.adoc" "docs/modelldokumentation/allgemeines.adoc")
           while IFS=: read -r keys value; do
             # Remove parentheses 
             keys=${keys#(}
@@ -126,17 +127,13 @@ jobs:
               key=$(echo "$key"| xargs)
               safe_key=$(printf '%s\n' "$key" | sed 's/[.[\*^$(){}+?|<>]/\\&/g')
               echo "Key - $key"
-              if [[ "$key" =~ ^[[:alnum:]_[:space:]]+$ ]]; then
-                sed -i "s/\\<$safe_key\\>/$value/g" README.adoc 
-                sed -i "s/\\<$safe_key\\>/$value/g" index.html
-                sed -i "s/\\<$safe_key\\>/$value/g" docs/modelldokumentation/modelldokumentation.adoc
-                sed -i "s/\\<$safe_key\\>/$value/g" docs/modelldokumentation/allgemeines.adoc
-              else
-                sed -i "s/$key/$value/g" README.adoc 
-                sed -i "s/$key/$value/g" index.html
-                sed -i "s/$key/$value/g" docs/modelldokumentation/modelldokumentation.adoc
-                sed -i "s/\\<$safe_key\\>/$value/g" docs/modelldokumentation/allgemeines.adoc
-              fi
+              for file in "${fileList[@]}"; do
+                  if [[ "$key" =~ ^[[:alnum:]_[:space:]]+$ ]]; then
+                  sed -i "s/\\<$safe_key\\>/$value/g" "$file"
+                else
+                  sed -i "s/$key/$value/g" "$file"
+                fi
+              done
             done
             for key in "${key_array[@]}"; do
               if [[ "$key" =~ ^[[:alnum:]_[:space:]]+$ ]]; then
